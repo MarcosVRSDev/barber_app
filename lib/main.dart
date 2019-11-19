@@ -280,12 +280,14 @@ class _BarberListState extends State<BarberList> {
 
   final List<Map> barberLists = [
     {
-      "name": "Barbearia do PA",
+      "name": "Barbearia do Laender",
       "location": "Rua Paraná, 184 - Cidade de Deus",
       "type": "De 09h ás 18h - Seg. à Sex.",
       "phone": "(37) 99122-3338",
       "logoText":
-      "https://cdn.pixabay.com/photo/2017/01/13/01/22/rocket-1976107_960_720.png"
+      "https://cdn.pixabay.com/photo/2017/01/13/01/22/rocket-1976107_960_720.png",
+      "description": "Barbaria conceituada que está no mercado de trabalho a mais de 10 anos e com vários clientes satisfeitos",
+      "detailImage": "https://cdn.pixabay.com/photo/2015/11/01/19/43/barber-1017457_960_720.jpg"
     },
     {
       "name": "Barbearia do PA",
@@ -468,9 +470,15 @@ class _BarberListState extends State<BarberList> {
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: GestureDetector(
         onTap: () {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          /*Scaffold.of(context).showSnackBar(SnackBar(
             content: Text(index.toString()),
-          ));
+          ));*/
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BarberDetailsPage(detailData: barberLists[index]),
+            ),
+          );
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -564,16 +572,14 @@ class _BarberListState extends State<BarberList> {
 }
 
 //Tela de Detalhes
-/*class BarberDetailsPage extends StatelessWidget {
+class BarberDetailsPage extends StatelessWidget {
   //static final String path = "lib/src/pages/ecommerce/ecommerce_detail3.dart";
 
-  final String images =
-      "https://cdn.pixabay.com/photo/2017/01/13/01/22/rocket-1976107_960_720.png";
-  final BarberList listBarber;
 
-  const BarberDetailsPage({Key key, this.listBarber, this.index}) : super(key: key);
+  final Map detailData;
 
-  final int index;
+ BarberDetailsPage({Key key, @required this.detailData}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -585,7 +591,7 @@ class _BarberListState extends State<BarberList> {
               height: double.infinity,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(images),
+                      image: CachedNetworkImageProvider(detailData["detailImage"]),
                       fit: BoxFit.fill)),
             ),
             SafeArea(
@@ -624,7 +630,7 @@ class _BarberListState extends State<BarberList> {
                                   children: <Widget>[
                                     ListTile(
                                       title: Text(
-                                        listBarber.index.[name],
+                                        detailData["name"],
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -652,7 +658,7 @@ class _BarberListState extends State<BarberList> {
                                           alignment: Alignment.topLeft,
                                           padding: const EdgeInsets.all(16.0),
                                           child: Text(
-                                              "This is the details widget. Here you can see more details of the product"),
+                                              detailData["description"]),
                                         )
                                       ],
                                     ),
@@ -728,4 +734,3 @@ class _BarberListState extends State<BarberList> {
     );
   }
 }
-*/
