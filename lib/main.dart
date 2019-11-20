@@ -73,7 +73,7 @@ class LoginPage extends StatelessWidget {
                         Container(
                           width: 100,
                           height: 100,
-                          margin: EdgeInsets.only(right: 15, top: 20),
+                          margin: EdgeInsets.only(top: 15, left: 5),
                           decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: ExactAssetImage('assets/images/logo.png'),
