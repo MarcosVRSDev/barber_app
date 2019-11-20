@@ -29,6 +29,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+          resizeToAvoidBottomInset : false,
           body: Stack(
             children: <Widget>[
               Container(
@@ -59,17 +60,27 @@ class LoginPage extends StatelessWidget {
               ListView(
                 children: <Widget>[
                   Container(
-                    //height: double.infinity,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 80),
+                    margin: EdgeInsets.only(left: 30, right: 30, top: 40),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text("Login",
+                        /*Text("Login",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white70,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 28.0)),
+                                fontSize: 28.0)),*/
+                        Container(
+                          width: 100,
+                          height: 100,
+                          margin: EdgeInsets.only(right: 15, top: 20),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: ExactAssetImage('assets/images/logo.png'),
+                                fit: BoxFit.fill),
+                          ),
+                        ),
+
                         Card(
                           margin: EdgeInsets.only(left: 30, right: 30, top: 60),
                           elevation: 11,
@@ -257,6 +268,7 @@ class BarberPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset : false,
         body: BarberList(),
       ),
     );
@@ -351,6 +363,7 @@ class _BarberListState extends State<BarberList> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset : false,
         backgroundColor: Color(0xfff0f0f0),
         body: SingleChildScrollView(
           child: Container(
@@ -585,6 +598,7 @@ class BarberDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset : false,
         body: Stack(
           children: <Widget>[
             Container(
