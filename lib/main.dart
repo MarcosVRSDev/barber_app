@@ -4,6 +4,7 @@ import 'package:wave/wave.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:intl/intl.dart';
 
 //void main() => runApp(BarberDetailsPage());
 void main() {
@@ -1069,6 +1070,8 @@ class MyData {
   String phone = '';
   String email = '';
   String age = '';
+  DateTime date;
+  TimeOfDay time;
 }
 
 class SchedulingPage extends StatelessWidget {
@@ -1089,15 +1092,36 @@ class SchedulingPage extends StatelessWidget {
                       bottomLeft: Radius.circular(30),
                       bottomRight: Radius.circular(30))),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 80),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Text(
+                    MaterialButton(
+                      padding: const EdgeInsets.all(8.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: Icon(Icons.arrow_back_ios),
+                      color: Colors.white,
+                      textColor: Colors.black,
+                      minWidth: 0,
+                      height: 20,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 45),
+                    child: Text(
                       "Agendamento",
                       style: TextStyle(color: Colors.white, fontSize: 24),
                     ),
-                  ],
+                    ),],
                 ),
               ),
             ),
@@ -1105,8 +1129,8 @@ class SchedulingPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 150),
                 child: new StepperBody(),
-                ),
               ),
+            ),
 
             /*children: SingleChildScrollView(
               padding: const EdgeInsets.all(32.0),
@@ -1305,58 +1329,172 @@ class _StepperBodyState extends State<StepperBody> {
     return new Container(
         child: new Form(
       key: _formKey,
-      child: new ListView(children: <Widget>[
-        new Stepper(
-          steps: steps,
-          type: StepperType.vertical,
-          currentStep: this.currStep,
-          onStepContinue: () {
-            setState(() {
-              if (currStep < steps.length - 1) {
-                currStep = currStep + 1;
-              } else {
-                currStep = 0;
-              }
-              // else {
-              // Scaffold
-              //     .of(context)
-              //     .showSnackBar(new SnackBar(content: new Text('$currStep')));
+      child: new ListView(
+        children: <Widget>[
+          new Stepper(
+            steps: steps,
+            type: StepperType.vertical,
+            currentStep: this.currStep,
+            onStepContinue: () {
+              setState(() {
+                if (currStep < steps.length - 1) {
+                  currStep = currStep + 1;
+                } else {
+                  currStep = 0;
+                }
+                // else {
+                // Scaffold
+                //     .of(context)
+                //     .showSnackBar(new SnackBar(content: new Text('$currStep')));
 
-              // if (currStep == 1) {
-              //   print('First Step');
-              //   print('object' + FocusScope.of(context).toStringDeep());
-              // }
+                // if (currStep == 1) {
+                //   print('First Step');
+                //   print('object' + FocusScope.of(context).toStringDeep());
+                // }
 
-              // }
-            });
-          },
-          onStepCancel: () {
-            setState(() {
-              if (currStep > 0) {
-                currStep = currStep - 1;
-              } else {
-                currStep = 0;
-              }
-            });
-          },
-          onStepTapped: (step) {
-            setState(() {
-              currStep = step;
-            });
-          },
-        ),
-        new RaisedButton(
-          padding: const EdgeInsets.all(15.0),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100.0)),
-          child: new Text(
-            'Save details',
-            style: new TextStyle(color: Colors.white),
+                // }
+              });
+            },
+            onStepCancel: () {
+              setState(() {
+                if (currStep > 0) {
+                  currStep = currStep - 1;
+                } else {
+                  currStep = 0;
+                }
+              });
+            },
+            onStepTapped: (step) {
+              setState(() {
+                currStep = step;
+              });
+            },
           ),
-          onPressed: _submitDetails,
-          color: Colors.red,
-        ),
-      ]),
+          SizedBox(
+            height: 20.0,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(30.0),
+            child: RaisedButton(
+              padding: const EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100.0)),
+              child: new Text(
+                'Agendar',
+                style: new TextStyle(color: Colors.white),
+              ),
+              onPressed: _submitDetails,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
     ));
+  }
+}
+
+class DateTimePicker extends StatelessWidget {
+  const DateTimePicker(
+      {Key key,
+        this.labelText,
+        this.selectedDate,
+        this.selectedTime,
+        this.selectDate,
+        this.selectTime})
+      : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(1970),
+        lastDate: new DateTime(2101));
+    if (picked != null && picked != selectedDate) selectDate(picked);
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked =
+    await showTimePicker(context: context, initialTime: selectedTime);
+    if (picked != null && picked != selectedTime) selectTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.body1;
+    return new Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        new Expanded(
+          flex: 4,
+          child: new _InputDropdown(
+            labelText: labelText,
+            valueText: new DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(width: 12.0),
+        new Expanded(
+          flex: 3,
+          child: new _InputDropdown(
+            valueText: selectedTime.format(context),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectTime(context);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown(
+      {Key key,
+        this.child,
+        this.labelText,
+        this.valueText,
+        this.valueStyle,
+        this.onPressed})
+      : super(key: key);
+
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return new InkWell(
+      onTap: onPressed,
+      child: new InputDecorator(
+        decoration: new InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Text(valueText, style: valueStyle),
+            new Icon(Icons.arrow_drop_down,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey.shade700
+                    : Colors.white70),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-<?xml version="1.0" encoding="ut-8"?>
-<resources>
-    <color name ="green">#FF79FF00</color>
-</resources>
-=======
 <?xml version="1.0" encoding="utf-8"?>
 <resource>
     <color name = "green">#FF79FF00</color>
 </resource>
->>>>>>> 7ccd5a47987586a9077a23238a4042f4db9a0de3
+
