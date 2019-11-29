@@ -1117,11 +1117,12 @@ class SchedulingPage extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.only(left: 45),
-                    child: Text(
-                      "Agendamento",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                      child: Text(
+                        "Agendamento",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
                     ),
-                    ),],
+                  ],
                 ),
               ),
             ),
@@ -1170,14 +1171,14 @@ class _StepperBodyState extends State<StepperBody> {
 
   List<Step> steps = [
     new Step(
-        title: const Text('Name'),
+        title: const Text('Data'),
         //subtitle: const Text('Enter your name'),
         isActive: true,
         //state: StepState.error,
         state: StepState.indexed,
         content: new TextFormField(
           focusNode: _focusNode,
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.datetime,
           autocorrect: false,
           onSaved: (String value) {
             data.name = value;
@@ -1185,30 +1186,36 @@ class _StepperBodyState extends State<StepperBody> {
           maxLines: 1,
           //initialValue: 'Aseem Wangoo',
           validator: (value) {
-            if (value.isEmpty || value.length < 1) {
-              return 'Please enter name';
+            if (value.isEmpty ||
+                value.length < 10 ||
+                value.length > 11 ||
+                !value.contains('/')) {
+              return 'Por favor, informe uma data válida';
             }
           },
           decoration: new InputDecoration(
-              labelText: 'Enter your name',
-              hintText: 'Enter a name',
+              labelText: 'Digite uma data',
+              hintText: '01/01/1999',
               //filled: true,
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.calendar_today),
               labelStyle:
                   new TextStyle(decorationStyle: TextDecorationStyle.solid)),
         )),
     new Step(
-        title: const Text('Phone'),
+        title: const Text('Hora'),
         //subtitle: const Text('Subtitle'),
         isActive: true,
         //state: StepState.editing,
         state: StepState.indexed,
         content: new TextFormField(
-          keyboardType: TextInputType.phone,
+          keyboardType: TextInputType.datetime,
           autocorrect: false,
           validator: (value) {
-            if (value.isEmpty || value.length < 10) {
-              return 'Please enter valid number';
+            if (value.isEmpty ||
+                value.length < 5 ||
+                value.length > 6 ||
+                !value.contains(':')) {
+              return 'Por favor, informe uma hora válida';
             }
           },
           onSaved: (String value) {
@@ -1216,24 +1223,27 @@ class _StepperBodyState extends State<StepperBody> {
           },
           maxLines: 1,
           decoration: new InputDecoration(
-              labelText: 'Enter your number',
-              hintText: 'Enter a number',
-              icon: const Icon(Icons.phone),
+              labelText: 'Informe uma hora',
+              hintText: '00:00',
+              icon: const Icon(Icons.alarm),
               labelStyle:
                   new TextStyle(decorationStyle: TextDecorationStyle.solid)),
         )),
     new Step(
-        title: const Text('Email'),
+        title: const Text('CPF'),
         // subtitle: const Text('Subtitle'),
         isActive: true,
         state: StepState.indexed,
         // state: StepState.disabled,
         content: new TextFormField(
-          keyboardType: TextInputType.emailAddress,
+          keyboardType: TextInputType.number,
           autocorrect: false,
           validator: (value) {
-            if (value.isEmpty || !value.contains('@')) {
-              return 'Please enter valid email';
+            if (value.isEmpty ||
+                value.length < 11 ||
+                value.length > 12 ||
+                !value.contains('-')) {
+              return 'Por favor, informe um CPF válido';
             }
           },
           onSaved: (String value) {
@@ -1241,23 +1251,23 @@ class _StepperBodyState extends State<StepperBody> {
           },
           maxLines: 1,
           decoration: new InputDecoration(
-              labelText: 'Enter your email',
-              hintText: 'Enter a email address',
-              icon: const Icon(Icons.email),
+              labelText: 'Digite o CPF do cartão de crédito',
+              hintText: '000000000-00',
+              icon: const Icon(Icons.fingerprint),
               labelStyle:
                   new TextStyle(decorationStyle: TextDecorationStyle.solid)),
         )),
     new Step(
-        title: const Text('Age'),
-        // subtitle: const Text('Subtitle'),
-        isActive: true,
-        state: StepState.indexed,
-        content: new TextFormField(
+      title: const Text('Cartão de Crédito'),
+      // subtitle: const Text('Subtitle'),
+      isActive: true,
+      state: StepState.indexed,
+      content: new TextFormField(
           keyboardType: TextInputType.number,
           autocorrect: false,
           validator: (value) {
-            if (value.isEmpty || value.length > 2) {
-              return 'Please enter valid age';
+            if (value.isEmpty || value.length > 19 || value.length < 18) {
+              return 'Por favor, digite um cartão de crédito válido';
             }
           },
           maxLines: 1,
@@ -1265,12 +1275,13 @@ class _StepperBodyState extends State<StepperBody> {
             data.age = value;
           },
           decoration: new InputDecoration(
-              labelText: 'Enter your age',
-              hintText: 'Enter age',
-              icon: const Icon(Icons.explicit),
+              labelText: 'Digite o cartão de crédito',
+              hintText: '0000 0000 0000 0000',
+              icon: const Icon(Icons.credit_card),
               labelStyle:
                   new TextStyle(decorationStyle: TextDecorationStyle.solid)),
-        )),
+        ),
+    ),
     // new Step(
     //     title: const Text('Fifth Step'),
     //     subtitle: const Text('Subtitle'),
@@ -1291,35 +1302,57 @@ class _StepperBodyState extends State<StepperBody> {
       final FormState formState = _formKey.currentState;
 
       if (!formState.validate()) {
-        showSnackBarMessage('Please enter correct data');
+        showSnackBarMessage('Por favor, informe todos os dados corretamente');
       } else {
         formState.save();
-        print("Name: ${data.name}");
-        print("Phone: ${data.phone}");
-        print("Email: ${data.email}");
-        print("Age: ${data.age}");
+        print("Data: ${data.name}");
+        print("Hora: ${data.phone}");
+        print("CPF: ${data.email}");
+        print("Cartão: ${data.age}");
 
         showDialog(
             context: context,
             child: new AlertDialog(
-              title: new Text("Details"),
+              title: Text("Agendamento realizado com sucesso!"),
+              titleTextStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               //content: new Text("Hello World"),
               content: new SingleChildScrollView(
                 child: new ListBody(
                   children: <Widget>[
-                    new Text("Name : " + data.name),
-                    new Text("Phone : " + data.phone),
-                    new Text("Email : " + data.email),
-                    new Text("Age : " + data.age),
+                    new Text("Data : " + data.name),
+                    new Text("Hora : " + data.phone),
+                    new Text("CPF : " + data.email),
+                    new Text("Cartão : " + data.age),
                   ],
                 ),
               ),
               actions: <Widget>[
-                new FlatButton(
-                  child: new Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                new RaisedButton(
+                  child: Text("Cancelar"),
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  colorBrightness: Brightness.dark,
+                  onPressed: (){
+                    Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                ),
+                new RaisedButton(
+                  child: Text("Confirmar"),
+                  textColor: Colors.white,
+                  color: Colors.green,
+                  colorBrightness: Brightness.dark,
+                  onPressed: (){
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BarberPage(),
+                    ),
+                  );
+                    Navigator.of(context, rootNavigator: true).pop();
                   },
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 ),
               ],
             ));
@@ -1394,107 +1427,3 @@ class _StepperBodyState extends State<StepperBody> {
   }
 }
 
-class DateTimePicker extends StatelessWidget {
-  const DateTimePicker(
-      {Key key,
-        this.labelText,
-        this.selectedDate,
-        this.selectedTime,
-        this.selectDate,
-        this.selectTime})
-      : super(key: key);
-
-  final String labelText;
-  final DateTime selectedDate;
-  final TimeOfDay selectedTime;
-  final ValueChanged<DateTime> selectDate;
-  final ValueChanged<TimeOfDay> selectTime;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: new DateTime(1970),
-        lastDate: new DateTime(2101));
-    if (picked != null && picked != selectedDate) selectDate(picked);
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay picked =
-    await showTimePicker(context: context, initialTime: selectedTime);
-    if (picked != null && picked != selectedTime) selectTime(picked);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle valueStyle = Theme.of(context).textTheme.body1;
-    return new Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        new Expanded(
-          flex: 4,
-          child: new _InputDropdown(
-            labelText: labelText,
-            valueText: new DateFormat.yMMMd().format(selectedDate),
-            valueStyle: valueStyle,
-            onPressed: () {
-              _selectDate(context);
-            },
-          ),
-        ),
-        const SizedBox(width: 12.0),
-        new Expanded(
-          flex: 3,
-          child: new _InputDropdown(
-            valueText: selectedTime.format(context),
-            valueStyle: valueStyle,
-            onPressed: () {
-              _selectTime(context);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InputDropdown extends StatelessWidget {
-  const _InputDropdown(
-      {Key key,
-        this.child,
-        this.labelText,
-        this.valueText,
-        this.valueStyle,
-        this.onPressed})
-      : super(key: key);
-
-  final String labelText;
-  final String valueText;
-  final TextStyle valueStyle;
-  final VoidCallback onPressed;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return new InkWell(
-      onTap: onPressed,
-      child: new InputDecorator(
-        decoration: new InputDecoration(
-          labelText: labelText,
-        ),
-        baseStyle: valueStyle,
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            new Text(valueText, style: valueStyle),
-            new Icon(Icons.arrow_drop_down,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey.shade700
-                    : Colors.white70),
-          ],
-        ),
-      ),
-    );
-  }
-}
