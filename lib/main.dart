@@ -261,7 +261,29 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-// Webview Twitter e Facebook
+//MENU
+class OvalRightBorderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, 0);
+    path.lineTo(size.width-40, 0);
+    path.quadraticBezierTo(
+        size.width, size.height / 4, size.width, size.height/2);
+    path.quadraticBezierTo(
+        size.width, size.height - (size.height / 4), size.width-40, size.height);
+    path.lineTo(0, size.height);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
+
+}
+
+
 
 // PAGINA HOME PÓS LOGIN
 class BarberPage extends StatelessWidget {
@@ -286,10 +308,13 @@ class BarberList extends StatefulWidget {
 class _BarberListState extends State<BarberList> {
   final TextStyle dropdownMenuItem =
       TextStyle(color: Colors.black, fontSize: 18);
-
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final primary = Color(0xFF63736B);
   final secondary = Color(0xFF0C0E0B);
   final green = Color(0xFF79FF00);
+  final Color active = Colors.grey.shade800;
+  final Color divider = Colors.grey.shade600;
+
 
   final List<Map> barberLists = [
     {
@@ -365,10 +390,13 @@ class _BarberListState extends State<BarberList> {
     },
   ];
 
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      key: _key,
       home: Scaffold(
+        drawer: _buildDrawer(),
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xfff0f0f0),
         body: SingleChildScrollView(
@@ -410,13 +438,15 @@ class _BarberListState extends State<BarberList> {
                           minWidth: 0,
                           height: 40,
                           onPressed: () {
-                            Navigator.push(
+                            _key.currentState.openDrawer();
+                            /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => LoginPage(),
                               ),
-                            );
+                            );*/
                           },
+
                         ),
                         Text(
                           "Barbearias",
@@ -474,6 +504,128 @@ class _BarberListState extends State<BarberList> {
       ),
     );
   }
+
+  _buildDrawer() {
+    final String image = 'https://cdn.pixabay.com/photo/2017/01/13/01/22/rocket-1976107_960_720.png';
+    return ClipPath(
+      clipper: OvalRightBorderClipper(),
+      child: Drawer(
+        child: Container(
+          padding: const EdgeInsets.only(left: 16.0, right: 40),
+          decoration: BoxDecoration(
+              color: primary, boxShadow: [BoxShadow(color: Colors.black45)]),
+          width: 300,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.power_settings_new,
+                        color: active,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                            colors: [Colors.orange, Colors.deepOrange])),
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: CachedNetworkImageProvider(image),
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "erika costell",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "@erika07",
+                    style: TextStyle(color: active, fontSize: 16.0),
+                  ),
+                  SizedBox(height: 30.0),
+                  _buildRow(Icons.home, "Home"),
+                  _buildDivider(),
+                  _buildRow(Icons.person_pin, "My profile"),
+                  _buildDivider(),
+                  _buildRow(Icons.message, "Messages", showBadge: true),
+                  _buildDivider(),
+                  _buildRow(Icons.notifications, "Notifications",
+                      showBadge: true),
+                  _buildDivider(),
+                  _buildRow(Icons.settings, "Settings"),
+                  _buildDivider(),
+                  _buildRow(Icons.email, "Contact us"),
+                  _buildDivider(),
+                  _buildRow(Icons.info_outline, "Help"),
+                  _buildDivider(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Divider _buildDivider() {
+    return Divider(
+      color: divider,
+    );
+  }
+
+  Widget _buildRow(IconData icon, String title, {bool showBadge = false}) {
+    final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(children: [
+        Icon(
+          icon,
+          color: active,
+        ),
+        SizedBox(width: 10.0),
+        Text(
+          title,
+          style: tStyle,
+        ),
+        Spacer(),
+        if (showBadge)
+          Material(
+            color: Colors.deepOrange,
+            elevation: 5.0,
+            shadowColor: Colors.red,
+            borderRadius: BorderRadius.circular(5.0),
+            child: Container(
+              width: 25,
+              height: 25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.deepOrange,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                "10+",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
+      ]),
+    );
+  }
+
 
   Widget buildList(BuildContext context, int index) {
     return Container(
